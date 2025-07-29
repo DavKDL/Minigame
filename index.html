@@ -1,22 +1,62 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <title>Desafio de Reflexo</title>
+  <meta charset="UTF-8" />
+  <title>Minigame Setas</title>
   <style>
-    body { font-family: sans-serif; text-align: center; background: #111; color: white; }
-    .keys { font-size: 2rem; margin: 20px; }
-    .key-box { display: inline-block; margin: 5px; padding: 10px 20px; border: 2px solid white; border-radius: 8px; }
-    .correct { background-color: green; }
-    .wrong { background-color: red; }
-    #result { font-size: 1.5rem; margin-top: 20px; }
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 20px;
+    }
+    #sequence {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .key-box {
+      width: 40px;
+      height: 40px;
+      line-height: 40px;
+      border: 2px solid black;
+      border-radius: 5px;
+      font-size: 24px;
+      user-select: none;
+    }
+    .correct {
+      background-color: #4CAF50;
+      color: white;
+      border-color: #4CAF50;
+    }
+    .wrong {
+      background-color: #f44336;
+      color: white;
+      border-color: #f44336;
+    }
+    #result {
+      font-size: 28px;
+      margin-top: 15px;
+      height: 40px;
+    }
+    #time {
+      font-size: 20px;
+      margin-bottom: 10px;
+    }
+    #instructions {
+      margin-bottom: 20px;
+      font-size: 16px;
+      color: #555;
+    }
   </style>
 </head>
 <body>
-  <h1>Pressione as teclas na ordem!</h1>
-  <p>Use <strong>Setas</strong> ou <strong>WASD</strong> — você escolhe!</p>
-  <div id="sequence" class="keys"></div>
-  <div id="timer">Tempo restante: <span id="time">15</span>s</div>
+
+  <h1>Minigame de Setas</h1>
+  <div id="instructions">Pressione as setas ou WASD na ordem certa. Aperte <strong>R</strong> para reiniciar.</div>
+
+  <div id="time">15</div>
+  <div id="sequence"></div>
   <div id="result"></div>
 
   <script src="script.js"></script>
