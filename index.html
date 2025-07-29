@@ -123,7 +123,7 @@
       const gainNode = audioCtx.createGain();
 
       oscillator.type = 'square';
-      oscillator.frequency.setValueAtTime(440, audioCtx.currentTime); // frequência 440Hz (Lá)
+      oscillator.frequency.setValueAtTime(530, audioCtx.currentTime); // frequência 440Hz (Lá)
       gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime); // volume baixo
 
       oscillator.connect(gainNode);
