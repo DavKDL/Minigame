@@ -2,63 +2,180 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <title>Minigame Setas</title>
+  <title>Minigame Setas Sequenciais</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      text-align: center;
-      padding: 20px;
-    }
-    #sequence {
+      margin: 0;
+      height: 100vh;
       display: flex;
+      flex-direction: column;
       justify-content: center;
-      gap: 10px;
-      margin-bottom: 20px;
-    }
-    .key-box {
-      width: 40px;
-      height: 40px;
-      line-height: 40px;
-      border: 2px solid black;
-      border-radius: 5px;
-      font-size: 24px;
+      align-items: center;
+      background-color: #fff;
+      transition: background-color 0.3s;
+      color: #000;
       user-select: none;
     }
-    .correct {
-      background-color: #4CAF50;
-      color: white;
-      border-color: #4CAF50;
-    }
-    .wrong {
-      background-color: #f44336;
-      color: white;
-      border-color: #f44336;
-    }
-    #result {
-      font-size: 28px;
-      margin-top: 15px;
-      height: 40px;
-    }
-    #time {
-      font-size: 20px;
-      margin-bottom: 10px;
-    }
     #instructions {
+      font-size: 18px;
+      margin-bottom: 30px;
+      text-align: center;
+      max-width: 300px;
+    }
+    #arrow-box {
+      font-size: 100px;
       margin-bottom: 20px;
-      font-size: 16px;
-      color: #555;
+      height: 120px;
+      line-height: 120px;
+      user-select: none;
+    }
+    #start-btn {
+      font-size: 30px;
+      padding: 20px 40px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      background-color: #007bff;
+      color: white;
+      transition: background-color 0.3s;
+      user-select: none;
+    }
+    #start-btn:hover {
+      background-color: #0056b3;
+    }
+    #result-symbol {
+      font-size: 150px;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      user-select: none;
+      display: none;
+    }
+    #time-taken {
+      margin-top: 20px;
+      font-size: 24px;
+      font-weight: bold;
+    }
+    .hidden {
+      display: none;
     }
   </style>
 </head>
 <body>
 
-  <h1>Minigame de Setas</h1>
-  <div id="instructions">Pressione as setas ou WASD na ordem certa. Aperte <strong>R</strong> para reiniciar.</div>
+  <div id="instructions">
+    Pressione as teclas na ordem!<br>
+    Use Setas ou WASD — você escolhe!
+  </div>
 
-  <div id="time">15</div>
-  <div id="sequence"></div>
-  <div id="result"></div>
+  <div id="arrow-box"></div>
 
-  <script src="script.js"></script>
+  <button id="start-btn">Começar Jogo</button>
+
+  <div id="time-taken"></div>
+  <div id="result-symbol"></div>
+
+  <script>
+    const arrowToWasd = { 'ArrowUp': 'W', 'ArrowDown': 'S', 'ArrowLeft': 'A', 'ArrowRight': 'D' };
+    const arrows = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'];
+    const arrowSymbols = {
+      ArrowUp: '↑',
+      ArrowDown: '↓',
+      ArrowLeft: '←',
+      ArrowRight: '→'
+    };
+
+    let sequence = [];
+    let currentIndex = 0;
+    let startTime = 0;
+    let gameRunning = false;
+
+    const arrowBox = document.getElementById('arrow-box');
+    const startBtn = document.getElementById('start-btn');
+    const resultSymbol = document.getElementById('result-symbol');
+    const timeTakenDiv = document.getElementById('time-taken');
+    const instructions = document.getElementById('instructions');
+
+    function generateSequence(length = 10) {
+      sequence = [];
+      for(let i = 0; i < length; i++) {
+        sequence.push(arrows[Math.floor(Math.random() * arrows.length)]);
+      }
+    }
+
+    function showArrow(index) {
+      if(index >= sequence.length) {
+        endGame(true);
+        return;
+      }
+      arrowBox.textContent = arrowSymbols[sequence[index]];
+    }
+
+    function endGame(success) {
+      gameRunning = false;
+      document.removeEventListener('keydown', handleKey);
+
+      let elapsed = ((Date.now() - startTime) / 1000).toFixed(2);
+      timeTakenDiv.textContent = `Tempo: ${elapsed} segundos`;
+
+      if(success) {
+        // Fundo verde e ✓ grande
+        document.body.style.backgroundColor = '#4CAF50';
+        resultSymbol.textContent = '✓';
+        resultSymbol.style.color = '#fff';
+        resultSymbol.style.display = 'block';
+      } else {
+        // Fundo vermelho e X grande
+        document.body.style.backgroundColor = '#f44336';
+        resultSymbol.textContent = '✗';
+        resultSymbol.style.color = '#fff';
+        resultSymbol.style.display = 'block';
+      }
+
+      arrowBox.textContent = '';
+      startBtn.textContent = 'Reiniciar Jogo';
+      startBtn.style.display = 'inline-block';
+    }
+
+    function handleKey(e) {
+      if(!gameRunning) return;
+
+      let inputKey = e.key.toUpperCase();
+      const expected = sequence[currentIndex];
+      const expectedWASD = arrowToWasd[expected];
+
+      if (inputKey === expected.replace('Arrow', '').toUpperCase() || inputKey === expectedWASD) {
+        currentIndex++;
+        if(currentIndex >= sequence.length) {
+          endGame(true);
+        } else {
+          showArrow(currentIndex);
+        }
+      } else {
+        endGame(false);
+      }
+    }
+
+    function startGame() {
+      // Reset estado
+      document.body.style.backgroundColor = '#fff';
+      resultSymbol.style.display = 'none';
+      timeTakenDiv.textContent = '';
+      currentIndex = 0;
+      generateSequence();
+      showArrow(0);
+      startTime = Date.now();
+      gameRunning = true;
+      startBtn.style.display = 'none';
+
+      document.addEventListener('keydown', handleKey);
+    }
+
+    startBtn.addEventListener('click', startGame);
+  </script>
+
 </body>
 </html>
