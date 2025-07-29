@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Desafio de Reflexo</title>
+  <style>
+    body { font-family: sans-serif; text-align: center; background: #111; color: white; }
+    .keys { font-size: 2rem; margin: 20px; }
+    .key-box { display: inline-block; margin: 5px; padding: 10px 20px; border: 2px solid white; border-radius: 8px; }
+    .correct { background-color: green; }
+    .wrong { background-color: red; }
+    #result { font-size: 1.5rem; margin-top: 20px; }
+  </style>
+</head>
+<body>
+  <h1>Pressione as teclas na ordem!</h1>
+  <p>Use <strong>Setas</strong> ou <strong>WASD</strong> — você escolhe!</p>
+  <div id="sequence" class="keys"></div>
+  <div id="timer">Tempo restante: <span id="time">15</span>s</div>
+  <div id="result"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
